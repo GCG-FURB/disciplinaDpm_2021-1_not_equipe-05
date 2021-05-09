@@ -9,7 +9,7 @@ O local a ser adicionado na variável Path deve ser o endereço do passo 5. Exem
 6º: Para ver se o flutter foi instalado corretamente, execute o comando "flutter doctor", se aparecer algum erro retorne para o 1º passo
 7º: Para criar um projeto com o flutter execute o comando "flutter create hello_world"
 8º: Abra a pasta do projeto criado no passo 7 usando o VS Code, e instale a extesão "Flutter", é a primeira que aparecer
-9º: Para rodar o projeto, após ter feito o passo 8 basta apertar "CTRL + F5", se aparecer algo na barra superior do VS code basta clickar em "CREATE NEW"
+9º: Para rodar o projeto, após ter feito o passo 8 basta abrir o main.dart e apertar "CTRL + F5", se aparecer algo na barra superior do VS code basta clickar em "CREATE NEW"
 
 Obs.:
 - Para depurar é simples, só colocar o breakpoint no VS Code e rodar, pra rodar vs code em mode de depuração é só apertar F5
