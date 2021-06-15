@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'gmap.dart';
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -200,9 +202,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         TextButton(
                           child: const Text('Localização Atual'),
                           onPressed: () {
-                            _geraQRLocalizacao();
-                            Navigator.of(context).pop();
 
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => GMap(lat: "37.42796133580664", long: "-122.085749655962")),
+                            );
                           },
                         ),
                         TextButton(
