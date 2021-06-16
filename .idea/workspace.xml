@@ -20,6 +20,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/unidade_4/qr_manager" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -34,12 +35,32 @@
       <option name="presentableId" value="Default" />
       <updated>1623708858509</updated>
     </task>
+    <task id="LOCAL-00001" summary="Inicial">
+      <created>1623709174221</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1623709174221</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Inicial" />
+    <option name="LAST_COMMIT_MESSAGE" value="Inicial" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="817" y="148" key="FileChooserDialogImpl" timestamp="1623708936802">
+    <state x="342" y="0" key="CommitChangelistDialog2" timestamp="1623709172870">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="817" y="148" key="FileChooserDialogImpl/0.0.1600.860@0.0.1600.860" timestamp="1623708936802" />
+    <state x="342" y="0" key="CommitChangelistDialog2/0.0.1600.860@0.0.1600.860" timestamp="1623709172870" />
+    <state x="817" y="148" key="FileChooserDialogImpl" timestamp="1623709329788">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state x="817" y="148" key="FileChooserDialogImpl/0.0.1600.860@0.0.1600.860" timestamp="1623709329788" />
+    <state x="392" y="163" key="Vcs.Push.Dialog.v2" timestamp="1623709282292">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state x="392" y="163" key="Vcs.Push.Dialog.v2/0.0.1600.860@0.0.1600.860" timestamp="1623709282292" />
   </component>
 </project>
