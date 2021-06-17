@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:qr_manager/services/qrService.dart';
+import 'package:qr_manager/tela_qr.dart';
 
 import 'gmap.dart';
 
@@ -29,28 +31,43 @@ class MyStatefulWidget extends StatefulWidget {
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
-  static FutureBuilder feature = FutureBuilder(
-      future: _createTable(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return snapshot.data as Widget;
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      });
+
+  // static FutureBuilder feature = FutureBuilder(
+  //     future: _createTable(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.hasData) {
+  //         return snapshot.data as Widget;
+  //       } else {
+  //         return Center(
+  //           child: CircularProgressIndicator(),
+  //         );
+  //       }
+  //     });
+
+  static Builder feature = Builder(
+      builder: (BuildContext context) => FutureBuilder(
+          future: _createTable(context),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data as Widget;
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }));
 
   static TextEditingController personControllerNome =
-  new TextEditingController();
+      new TextEditingController();
 
   static TextEditingController personControllerIdade =
-  new TextEditingController();
+      new TextEditingController();
 
   static TextEditingController personControllerCPF =
-  new TextEditingController();
+      new TextEditingController();
 
-  final TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  final TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   // final List<Widget> _widgetOptions = <Widget>[
   //   Scaffold(
@@ -194,7 +211,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       content: SingleChildScrollView(
                         child: ListBody(
                           children: const <Widget>[
-                            Text('De que maneira você deseja adicionar um QR Code?'),
+                            Text(
+                                'De que maneira você deseja adicionar um QR Code?'),
                           ],
                         ),
                       ),
@@ -202,12 +220,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         TextButton(
                           child: const Text('Localização Atual'),
                           onPressed: () {
-
                             Navigator.of(context).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => GMap(lat: "37.42796133580664", long: "-122.085749655962")),
-                            );
                           },
                         ),
                         TextButton(
@@ -233,48 +246,72 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   //       int.parse(personControllerIdade.text), personControllerCPF.text));
   // }
 
+  // static Future<DataTable> _createTable() async {
+  //   List<DataRow> dataTableValues = await _getDataTable();
+  //   return DataTable(
+  //     columns: const <DataColumn>[
+  //       // DataColumn(
+  //       //   label: Text(
+  //       //     'Ex',
+  //       //     style: TextStyle(fontStyle: FontStyle.italic),
+  //       //   ),
+  //       // ),
+  //       DataColumn(
+  //         label: Text(
+  //           'Meus códigos QR',
+  //           style: TextStyle(fontSize: 30),
+  //         ),
+  //       ),
+  //     ],
+  //     rows: dataTableValues,
+  //   );
+  // }
+  //
+  // static Future<List<DataRow>> _getDataTable() async {
+  //   List<DataRow> list = [];
+  //   List<DataTableEntities> allData = await _getAllData();
+  //   allData.forEach((element) {
+  //     list.add(DataRow(cells: <DataCell>[
+  //       // DataCell(Text('${element.entity}')),
+  //       DataCell(Text('${element.json}'))
+  //     ]));
+  //   });
+  //   return list;
+  // }
 
-  static Future<DataTable> _createTable() async {
-    List<DataRow> dataTableValues = await _getDataTable();
-    return DataTable(
-      columns: const <DataColumn>[
-        DataColumn(
-          label: Text(
-            'Entidade',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'JSON',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-      ],
-      rows: dataTableValues,
+  static Future<ListView> _createTable(BuildContext context) async {
+    List<Widget> dataTableValues = await getAllData(context);
+    return ListView(
+      padding: const EdgeInsets.all(8),
+      children: dataTableValues,
     );
   }
 
-  static Future<List<DataRow>> _getDataTable() async {
-    List<DataRow> list = [];
-    List<DataTableEntities> allData = await _getAllData();
-    allData.forEach((element) {
-      list.add(DataRow(cells: <DataCell>[
-        DataCell(Text('${element.entity}')),
-        DataCell(Text('${element.json}'))
-      ]));
-    });
-    return list;
-  }
+  static Future<List<Widget>> getAllData(BuildContext context) async {
+    List<Widget> list = <Widget>[];
 
-  static Future<List<DataTableEntities>> _getAllData() async {
-    List<DataTableEntities> list = <DataTableEntities>[];
-    // List<QRDTO> pessoasList = await getQR();
-    // pessoasList.forEach((element) {
-    //   DataTableEntities personEntity = DataTableEntities("Código",
-    //       '{id: ${element.local}, descrição: ${element.desc}}');
-    //   list.add(personEntity);
-    // });
+    List<QRDTO> qrList = await getQR();
+    qrList.forEach((element) {
+      GestureDetector personEntity = GestureDetector(
+          onTap: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TelaQR(
+                              lat: element.lat,
+                              long: element.long,
+                              id: element.id,
+                              desc: element.desc,
+                            )))
+              },
+          child: Card(
+              child: Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Center(
+                      child: Text(
+                          'id: ${element.id}, descrição: ${element.desc}')))));
+      list.add(personEntity);
+    });
 
     // List<PessoaDTO> pessoasList = await getPessoa();
     // pessoasList.forEach((element) {
@@ -320,13 +357,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     );
   }
 
-  static void _geraQRLocalizacao(){
+  static void _geraQRLocalizacao() {}
 
-  }
-
-  static void _geraQRCamera(){
-
-  }
+  static void _geraQRCamera() {}
 
   @override
   Widget build(BuildContext context) {
@@ -335,31 +368,27 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         title: const Text('QR Manager'),
         actions: <Widget>[
           Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                feature = FutureBuilder(
-                    future: _createTable(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return snapshot.data as Widget;
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    });
-              },
-              child: Icon(
-                  Icons.refresh
-              ),
-            )
-        ),
-  ],
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  feature = Builder(
+                      builder: (BuildContext context) => FutureBuilder(
+                          future: _createTable(context),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return snapshot.data as Widget;
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          }));
+                },
+                child: Icon(Icons.refresh),
+              )),
+        ],
       ),
-      body: Center(
-        child: lista
-      ),
+      body: Center(child: lista),
     );
   }
 }
