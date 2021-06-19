@@ -125,7 +125,7 @@ class _GMapState extends State<GMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Map')),
+      appBar: AppBar(title: Text('Mapa')),
       body: Stack(
         children: <Widget>[
           GoogleMap(

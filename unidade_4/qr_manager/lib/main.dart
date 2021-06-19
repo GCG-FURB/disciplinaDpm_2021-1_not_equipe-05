@@ -17,7 +17,7 @@ void main() => runApp(const MyApp());
 class MyApp extends StatelessWidget {
 
   const MyApp({Key key}) : super(key: key);
-  static const String _title = 'Flutter Code Sample';
+  static const String _title = 'QrCode Manager';
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +234,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             });
                             debugPrint(posicao.toString());
                             initializeDateFormatting("pt_BR");
-                            var format = new DateFormat('dd-MM-yyyy hh:mm:ss');
+                            var format = new DateFormat('dd/MM/yyyy hh:mm:ss');
                             QRDTO qrDto = QRDTO.A(posicao.latitude.toString(), posicao.longitude.toString(), format.format(DateTime.now()));
                             createQR(qrDto).then((value) => null);
                             Navigator.of(context).pop();
@@ -243,7 +243,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         TextButton(
                           child: const Text('Ler usando câmera'),
                           onPressed: () {
-
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => LeitorQr()));

@@ -100,7 +100,7 @@ class _LeitorQrState extends State<LeitorQr> {
 
         terminou = true;
         initializeDateFormatting("pt_BR");
-        var format = new DateFormat('dd-MM-yyyy hh:mm:ss');
+        var format = new DateFormat('dd/MM/yyyy hh:mm:ss');
         var dadosQrCode = result.code.split(',');
         QRDTO qrDto = QRDTO.A(dadosQrCode[0], dadosQrCode[1], format.format(DateTime.now()));
         createQR(qrDto).then((value) => null);
