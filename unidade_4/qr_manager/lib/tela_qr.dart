@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:qr_manager/gmap.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class TelaQR extends StatefulWidget {
   String lat;
@@ -66,14 +67,18 @@ class _TelaQRState extends State<TelaQR> {
           child: ListView(
         padding: const EdgeInsets.all(8),
         children: <Widget>[
-          Card(),
           Padding(
               padding: EdgeInsets.all(0),
-              child: Card(
-                child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("id: " + id.toString())),
-              )),
+                child: Center(
+                    child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child:  QrImage(
+                          data: "${lat},${long}",
+                          gapless: true,
+                          size: 250,
+                          errorCorrectionLevel: QrErrorCorrectLevel.H,
+                        ))),
+              ),
           Padding(
               padding: EdgeInsets.all(0),
               child: Card(
@@ -94,7 +99,8 @@ class _TelaQRState extends State<TelaQR> {
                 child: Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Text("Descrição: " + desc)),
-              ))
+              )),
+
         ],
       )),
     );

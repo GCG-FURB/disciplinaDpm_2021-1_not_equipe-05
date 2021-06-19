@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'package:qr_manager/services/qrService.dart';
 import 'package:qr_manager/tela_qr.dart';
-
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'gmap.dart';
+import 'services/qrService.dart';
+
+
+
 
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
 
+  const MyApp({Key key}) : super(key: key);
   static const String _title = 'Flutter Code Sample';
 
   @override
@@ -219,7 +225,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       actions: <Widget>[
                         TextButton(
                           child: const Text('Localização Atual'),
-                          onPressed: () {
+                          onPressed: () async {
+                            Position posicao;
+                            await Geolocator.getCurrentPosition().then(
+                                    (value) => {
+                                     posicao = value
+                            });
+                            debugPrint(posicao.toString());
+                            initializeDateFormatting("pt_BR");
+                            var format = new DateFormat('dd-MM-yyyy hh:mm:ss');
+                            QRDTO qrDto = QRDTO.A(posicao.latitude.toString(), posicao.longitude.toString(), format.format(DateTime.now()));
+                            createQR(qrDto).then((value) => null);
                             Navigator.of(context).pop();
                           },
                         ),
