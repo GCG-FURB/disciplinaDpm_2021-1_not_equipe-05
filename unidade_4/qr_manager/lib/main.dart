@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_manager/leitor.dart';
 
 import 'package:qr_manager/services/qrService.dart';
 import 'package:qr_manager/tela_qr.dart';
@@ -224,7 +225,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       ),
                       actions: <Widget>[
                         TextButton(
-                          child: const Text('Localização Atual'),
+                          child: const Text('Localização atual'),
                           onPressed: () async {
                             Position posicao;
                             await Geolocator.getCurrentPosition().then(
@@ -240,9 +241,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           },
                         ),
                         TextButton(
-                          child: const Text('Ler usando Camera'),
+                          child: const Text('Ler usando câmera'),
                           onPressed: () {
-                            Navigator.of(context).pop();
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => LeitorQr()));
                           },
                         ),
                       ],
@@ -276,6 +280,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   //         label: Text(
   //           'Meus códigos QR',
   //           style: TextStyle(fontSize: 30),
+  //         ),
   //         ),
   //       ),
   //     ],
