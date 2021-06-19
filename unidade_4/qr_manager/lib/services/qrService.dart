@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 Future<QRDTO> createQR(QRDTO qr) async {
   try {
     final response = await http.post(
-      Uri.parse('http://192.168.1.24:8080/location/createOrUpdateLocation'),
+      Uri.parse('http://192.168.2.105:8080/location/createOrUpdateLocation'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
         "latitude": qr.lat,
@@ -30,7 +30,7 @@ Future<QRDTO> createQR(QRDTO qr) async {
 Future<List<QRDTO>> getQR() async {
   try{
   final response = await http.get(
-    Uri.parse('http://192.168.1.24:8080/location/locations'),
+    Uri.parse('http://192.168.2.105:8080/location/locations'),
     headers: {"Content-Type": "application/json"},
   );
   if (response.statusCode >= 200 && response.statusCode <= 300) {
