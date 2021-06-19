@@ -104,6 +104,8 @@ class _LeitorQrState extends State<LeitorQr> {
         var dadosQrCode = result.code.split(',');
         QRDTO qrDto = QRDTO.A(dadosQrCode[0], dadosQrCode[1], format.format(DateTime.now()));
         createQR(qrDto).then((value) => null);
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
         Navigator.push(
             context,
             MaterialPageRoute(

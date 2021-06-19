@@ -56,8 +56,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           future: _createTable(context),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              debugPrint("Tem dados");
               return snapshot.data as Widget;
             } else {
+              debugPrint("Não Tem dados");
               return Center(
                 child: CircularProgressIndicator(),
               );
@@ -76,130 +78,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  // final List<Widget> _widgetOptions = <Widget>[
-  //   Scaffold(
-  //     body: Column(
-  //       children: [
-  //         Container(
-  //           margin: EdgeInsets.all(20.0),
-  //           child: TextField(
-  //             key: Key('0'),
-  //             controller: personControllerNome,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'Nome',
-  //             ),
-  //           ),
-  //         ),
-  //         Container(
-  //           margin: EdgeInsets.all(20.0),
-  //           child: TextFormField(
-  //             key: Key('1'),
-  //             controller: personControllerIdade,
-  //             keyboardType: TextInputType.number,
-  //             inputFormatters: <TextInputFormatter>[
-  //               WhitelistingTextInputFormatter.digitsOnly
-  //             ],
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'Idade',
-  //             ),
-  //           ),
-  //         ),
-  //         Container(
-  //           margin: EdgeInsets.all(20.0),
-  //           child: TextField(
-  //             key: Key('2'),
-  //             controller: personControllerCPF,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'CPF',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //     floatingActionButton: FloatingActionButton(
-  //       backgroundColor: Colors.blue,
-  //       child: Icon(Icons.add),
-  //       onPressed: () {
-  //         _addPerson();
-  //       },
-  //     ),
-  //   ),
-  //   Scaffold(
-  //     body: Column(
-  //       children: [
-  //         Container(
-  //           margin: EdgeInsets.all(20.0),
-  //           child: TextField(
-  //             key: Key('3'),
-  //             controller: carControllerNome,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'Nome',
-  //             ),
-  //           ),
-  //         ),
-  //         Container(
-  //           margin: EdgeInsets.all(20.0),
-  //           child: TextField(
-  //             key: Key('4'),
-  //             controller: carControllerMarca,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'Marca',
-  //             ),
-  //           ),
-  //         ),
-  //         Container(
-  //           margin: EdgeInsets.all(20.0),
-  //           child: TextFormField(
-  //             controller: carControllerAnoFabricacao,
-  //             key: Key('5'),
-  //             keyboardType: TextInputType.number,
-  //             inputFormatters: <TextInputFormatter>[
-  //               WhitelistingTextInputFormatter.digitsOnly
-  //             ],
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'Ano de Fabricação',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //     floatingActionButton: FloatingActionButton(
-  //       backgroundColor: Colors.blue,
-  //       child: Icon(Icons.add),
-  //       onPressed: () {
-  //         _addCar();
-  //       },
-  //     ),
-  //   ),
-  //   Scaffold(
-  //       body: Container(
-  //         child: feature,
-  //       ),
-  //       floatingActionButton: Builder(
-  //           builder: (context) => FloatingActionButton(
-  //               child: Icon(Icons.update),
-  //               onPressed: () {
-  //                 Scaffold.of(context).setState(() {
-  //                   feature = FutureBuilder(
-  //                       future: _createTable(),
-  //                       builder: (context, snapshot) {
-  //                         if (snapshot.hasData) {
-  //                           return snapshot.data as Widget;
-  //                         } else {
-  //                           return Center(
-  //                             child: CircularProgressIndicator(),
-  //                           );
-  //                         }
-  //                       });
-  //                 });
-  //               }))),
-  // ];
 
   final Widget lista = Scaffold(
       body: Container(
@@ -254,50 +132,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 );
               })));
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
-  // static void _addPerson() {
-  //   createPessoa(PessoaDTO.A(personControllerNome.text,
-  //       int.parse(personControllerIdade.text), personControllerCPF.text));
-  // }
-
-  // static Future<DataTable> _createTable() async {
-  //   List<DataRow> dataTableValues = await _getDataTable();
-  //   return DataTable(
-  //     columns: const <DataColumn>[
-  //       // DataColumn(
-  //       //   label: Text(
-  //       //     'Ex',
-  //       //     style: TextStyle(fontStyle: FontStyle.italic),
-  //       //   ),
-  //       // ),
-  //       DataColumn(
-  //         label: Text(
-  //           'Meus códigos QR',
-  //           style: TextStyle(fontSize: 30),
-  //         ),
-  //         ),
-  //       ),
-  //     ],
-  //     rows: dataTableValues,
-  //   );
-  // }
-  //
-  // static Future<List<DataRow>> _getDataTable() async {
-  //   List<DataRow> list = [];
-  //   List<DataTableEntities> allData = await _getAllData();
-  //   allData.forEach((element) {
-  //     list.add(DataRow(cells: <DataCell>[
-  //       // DataCell(Text('${element.entity}')),
-  //       DataCell(Text('${element.json}'))
-  //     ]));
-  //   });
-  //   return list;
-  // }
 
   static Future<ListView> _createTable(BuildContext context) async {
     List<Widget> dataTableValues = await getAllData(context);
