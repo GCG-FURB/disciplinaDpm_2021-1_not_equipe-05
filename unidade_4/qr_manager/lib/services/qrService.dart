@@ -44,13 +44,12 @@ Future<List<QRDTO>> getQR() async {
     return listQRDTO;
 
   } else {
-    throw Exception('Failed to load person');
+    throw Exception('Failed to load QrCodes');
   }
   return [];
   }catch(e) {
     print(e);
     return [];
-    //throw Exception('Failed to load person');
   }
 }
 

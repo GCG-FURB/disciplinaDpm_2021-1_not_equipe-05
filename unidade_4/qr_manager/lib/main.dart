@@ -330,7 +330,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   padding: EdgeInsets.all(15.0),
                   child: Center(
                       child: Text(
-                          'id: ${element.id}, descrição: ${element.desc}')))));
+                          'Descrição: ${element.desc}')))));
       list.add(personEntity);
     });
 
