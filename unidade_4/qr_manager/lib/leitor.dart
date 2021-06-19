@@ -88,27 +88,28 @@ class _LeitorQrState extends State<LeitorQr> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
+    bool terminou = false;
     setState(() {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
+      if(!terminou) {
+        setState(() {
+          result = scanData;
+        });
 
+        terminou = true;
         initializeDateFormatting("pt_BR");
         var format = new DateFormat('dd-MM-yyyy hh:mm:ss');
-
         var dadosQrCode = result.code.split(',');
-        QRDTO qrDto = QRDTO.A(
-            dadosQrCode[0], dadosQrCode[1], format.format(DateTime.now()));
+        QRDTO qrDto = QRDTO.A(dadosQrCode[0], dadosQrCode[1], format.format(DateTime.now()));
         createQR(qrDto).then((value) => null);
-
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
                     GMap(lat: dadosQrCode[0], long: dadosQrCode[1])));
-      });
+      }
     });
   }
 
