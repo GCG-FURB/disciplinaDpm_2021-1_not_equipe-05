@@ -40,13 +40,13 @@ Future<List<QRDTO>> getQR() async {
       var qrDTO = QRDTO.fromJsonDecoded(dto);
       listQRDTO.add(qrDTO);
     });
-    debugPrint("aaaa");
+    debugPrint("Retornou Lista");
     return listQRDTO;
 
   } else {
     throw Exception('Failed to load QrCodes');
   }
-  return [];
+
   }catch(e) {
     print(e);
     return [];

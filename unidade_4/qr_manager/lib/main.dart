@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:qr_manager/leitor.dart';
-
+import 'dart:async';
 import 'package:qr_manager/services/qrService.dart';
 import 'package:qr_manager/tela_qr.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'gmap.dart';
 import 'services/qrService.dart';
-
-
-
 
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-
   const MyApp({Key key}) : super(key: key);
   static const String _title = 'Flutter Code Sample';
 
@@ -37,7 +32,15 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  int _selectedIndex = 0;
+  static StreamController<ListView> streamLista;
+
+  @override
+  void initState() {
+    super.initState();
+
+    streamLista = StreamController<ListView>();
+    _createTable(context);
+  }
 
   // static FutureBuilder feature = FutureBuilder(
   //     future: _createTable(),
@@ -51,33 +54,32 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   //       }
   //     });
 
-  static Builder feature = Builder(
-      builder: (BuildContext context) => FutureBuilder(
-          future: _createTable(context),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              debugPrint("Tem dados");
-              return snapshot.data as Widget;
-            } else {
-              debugPrint("Não Tem dados");
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }));
+  static Builder feature = retornaStream();
 
-  static TextEditingController personControllerNome =
-      new TextEditingController();
+  // static TextEditingController personControllerNome =
+  //     new TextEditingController();
 
-  static TextEditingController personControllerIdade =
-      new TextEditingController();
-
-  static TextEditingController personControllerCPF =
-      new TextEditingController();
 
   final TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
+  static Builder retornaStream(){
+    debugPrint("RetornaFeature");
+    return Builder(
+        builder: (BuildContext context) => StreamBuilder(
+            stream: streamLista.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                debugPrint("Tem dados");
+                return snapshot.data as Widget;
+              } else {
+                debugPrint("Não Tem dados");
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }));
+  }
 
   final Widget lista = Scaffold(
       body: Container(
@@ -106,14 +108,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           child: const Text('Localização atual'),
                           onPressed: () async {
                             Position posicao;
-                            await Geolocator.getCurrentPosition().then(
-                                    (value) => {
-                                     posicao = value
-                            });
+                            await Geolocator.getCurrentPosition()
+                                .then((value) => {posicao = value});
                             debugPrint(posicao.toString());
                             initializeDateFormatting("pt_BR");
                             var format = new DateFormat('dd-MM-yyyy hh:mm:ss');
-                            QRDTO qrDto = QRDTO.A(posicao.latitude.toString(), posicao.longitude.toString(), format.format(DateTime.now()));
+                            QRDTO qrDto = QRDTO.A(
+                                posicao.latitude.toString(),
+                                posicao.longitude.toString(),
+                                format.format(DateTime.now()));
                             createQR(qrDto).then((value) => null);
                             Navigator.of(context).pop();
                           },
@@ -121,10 +124,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         TextButton(
                           child: const Text('Ler usando câmera'),
                           onPressed: () {
-
                             Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => LeitorQr()));
+                                MaterialPageRoute(
+                                    builder: (context) => LeitorQr()));
                           },
                         ),
                       ],
@@ -133,14 +136,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 );
               })));
 
-
-
-  static Future<ListView> _createTable(BuildContext context) async {
+  static void _createTable(BuildContext context) async {
+    debugPrint("-CreateTable");
     List<Widget> dataTableValues = await getAllData(context);
-    return ListView(
+    streamLista.add(ListView(
       padding: const EdgeInsets.all(8),
       children: dataTableValues,
-    );
+    ));
+
   }
 
   static Future<List<Widget>> getAllData(BuildContext context) async {
@@ -148,7 +151,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
     List<QRDTO> qrList = await getQR();
     qrList.forEach((element) {
-      GestureDetector personEntity = GestureDetector(
+      Widget personEntity = GestureDetector(
           onTap: () => {
                 Navigator.push(
                     context,
@@ -163,59 +166,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           child: Card(
               child: Padding(
                   padding: EdgeInsets.all(15.0),
-                  child: Center(
-                      child: Text(
-                          'Descrição: ${element.desc}')))));
+                  child: Center(child: Text('Descrição: ${element.desc}')))));
       list.add(personEntity);
     });
-
-    // List<PessoaDTO> pessoasList = await getPessoa();
-    // pessoasList.forEach((element) {
-    //   DataTableEntities personEntity = DataTableEntities("Pessoa",
-    //       '{id: ${element.id}, nome: ${element.nome}}');
-    //   list.add(personEntity);
-    // });
-
-    // List<CarroDTO> carroList = await getCarro();
-    // carroList.forEach((element) {
-    //   DataTableEntities carEntity = DataTableEntities("Carro",
-    //       '{id: ${element.id}, nome: ${element.nome}, marca: ${element.marca}, anoDeFabricacao: ${element.anoDeFabricacao}}');
-    //   list.add(carEntity);
-    // });
     return list;
   }
-
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('AlertDialog Title'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('This is a demo alert dialog.'),
-                Text('Would you like to approve of this message?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Approve'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  static void _geraQRLocalizacao() {}
-
-  static void _geraQRCamera() {}
 
   @override
   Widget build(BuildContext context) {
@@ -223,25 +178,30 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       appBar: AppBar(
         title: const Text('QR Manager'),
         actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
+          GestureDetector(
                 onTap: () {
-                  feature = Builder(
-                      builder: (BuildContext context) => FutureBuilder(
-                          future: _createTable(context),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return snapshot.data as Widget;
-                            } else {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                          }));
+                  debugPrint("Refresh");
+                  // futureListView = _createTable(context);
+                  _createTable(context);
+                        // Builder(
+                        // builder: (BuildContext context) => FutureBuilder(
+                        //     future: _createTable(context),
+                        //     builder: (context, snapshot) {
+                        //       if (snapshot.hasData) {
+                        //         // debugPrint("Has Data");
+                        //         return snapshot.data as Widget;
+                        //       } else {
+                        //         // debugPrint("Hasn't Data");
+                        //         return Center(
+                        //           child: CircularProgressIndicator(),
+                        //         );
+                        //       }
+                        //     }));
+
+
                 },
-                child: Icon(Icons.refresh),
-              )),
+                child: Padding(padding: EdgeInsets.fromLTRB(0,0,15,0),child: Icon(Icons.refresh),),
+              ),
         ],
       ),
       body: Center(child: lista),
