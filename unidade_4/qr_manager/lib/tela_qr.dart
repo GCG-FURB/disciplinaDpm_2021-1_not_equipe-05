@@ -1,6 +1,4 @@
 import 'dart:collection';
-
-
 import 'package:flutter/material.dart';
 import 'package:qr_manager/gmap.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -77,6 +75,10 @@ class _TelaQRState extends State<TelaQR> {
                           gapless: true,
                           size: 250,
                           errorCorrectionLevel: QrErrorCorrectLevel.H,
+                          embeddedImage: AssetImage('assets/images/flutter_logo.png'),
+                          embeddedImageStyle: QrEmbeddedImageStyle(
+                            size: Size(80, 80),
+                          ),
                         ))),
               ),
           Padding(
