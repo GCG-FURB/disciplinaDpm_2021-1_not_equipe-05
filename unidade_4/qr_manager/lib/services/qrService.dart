@@ -29,27 +29,47 @@ Future<QRDTO> createQR(QRDTO qr) async {
 
 Future<List<QRDTO>> getQR() async {
   try{
-  final response = await http.get(
-    Uri.parse('http://192.168.1.6:8080/location/locations'),
-    headers: {"Content-Type": "application/json"},
-  );
-  if (response.statusCode >= 200 && response.statusCode <= 300) {
-    List<dynamic> list = jsonDecode(response.body);
-    List<QRDTO> listQRDTO = [];
-    list.forEach((dto) {
-      var qrDTO = QRDTO.fromJsonDecoded(dto);
-      listQRDTO.add(qrDTO);
-    });
-    debugPrint("aaaa");
-    return listQRDTO;
+    final response = await http.get(
+      Uri.parse('http://192.168.1.6:8080/location/locations'),
+      headers: {"Content-Type": "application/json"},
+    );
+    if (response.statusCode >= 200 && response.statusCode <= 300) {
+      List<dynamic> list = jsonDecode(response.body);
+      List<QRDTO> listQRDTO = [];
+      list.forEach((dto) {
+        var qrDTO = QRDTO.fromJsonDecoded(dto);
+        listQRDTO.add(qrDTO);
+      });
+      debugPrint("Retornou Lista");
+      return listQRDTO;
 
-  } else {
-    throw Exception('Failed to load QrCodes');
-  }
-  return [];
+    } else {
+      throw Exception('Failed to load QrCodes');
+    }
+
   }catch(e) {
     print(e);
     return [];
+  }
+}
+
+
+Future<bool> deleteQR(int id) async {
+  try{
+    final response = await http.delete(
+      Uri.parse('http://192.168.1.6:8080/location/delete/${id}'),
+      headers: {"Content-Type": "application/json"},
+    );
+    if (response.statusCode >= 200 && response.statusCode <= 300) {
+      debugPrint("Retornou Lista");
+      return true;
+    } else {
+      throw Exception('Failed to delete qrCode');
+    }
+
+  }catch(e) {
+    print(e);
+    return false;
   }
 }
 

@@ -141,25 +141,25 @@ class _GMapState extends State<GMap> {
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
           ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 80),
-            child: Text("Coding with Curry"),
-          )
+          // Container(
+          //   alignment: Alignment.bottomCenter,
+          //   padding: EdgeInsets.fromLTRB(0, 0, 0, 80),
+          //   child: Text("Coding with Curry"),
+          // )
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Increment',
-        child: Icon(Icons.map),
-        onPressed: () {
-          setState(() {
-            _showMapStyle = !_showMapStyle;
-          });
-
-          _toggleMapStyle();
-        },
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: FloatingActionButton(
+      //   tooltip: 'Increment',
+      //   child: Icon(Icons.map),
+      //   onPressed: () {
+      //     setState(() {
+      //       _showMapStyle = !_showMapStyle;
+      //     });
+      //
+      //     _toggleMapStyle();
+      //   },
+      // ),
     );
   }
 }

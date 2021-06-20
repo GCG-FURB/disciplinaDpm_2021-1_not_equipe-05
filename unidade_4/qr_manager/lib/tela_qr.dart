@@ -40,16 +40,6 @@ class _TelaQRState extends State<TelaQR> {
 
       appBar: AppBar(
         title: Text("QR - " + desc),
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Icon(Icons.arrow_back_sharp),
-              )),
-        ],
       ),
       floatingActionButton: Builder(
           builder: (context) => FloatingActionButton(
