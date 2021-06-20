@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 Future<QRDTO> createQR(QRDTO qr) async {
   try {
     final response = await http.post(
-      Uri.parse('http://192.168.1.6:8080/location/createOrUpdateLocation'),
+      Uri.parse('http://192.168.2.105:8080/location/createOrUpdateLocation'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
         "latitude": qr.lat,
@@ -30,7 +30,7 @@ Future<QRDTO> createQR(QRDTO qr) async {
 Future<List<QRDTO>> getQR() async {
   try{
     final response = await http.get(
-      Uri.parse('http://192.168.1.6:8080/location/locations'),
+      Uri.parse('http://192.168.2.105:8080/location/locations'),
       headers: {"Content-Type": "application/json"},
     );
     if (response.statusCode >= 200 && response.statusCode <= 300) {
@@ -53,11 +53,34 @@ Future<List<QRDTO>> getQR() async {
   }
 }
 
+Future<QRDTO> getQRid(int id) async {
+  try{
+    final response = await http.get(
+      Uri.parse('http://192.168.2.105:8080/location/locations/${id}'),
+      headers: {"Content-Type": "application/json"},
+    );
+    if (response.statusCode >= 200 && response.statusCode <= 300) {
+
+        var qrDTO = QRDTO.fromJsonDecoded(jsonDecode(response.body));
+
+      debugPrint("Retornou QR");
+      return qrDTO;
+
+    } else {
+      throw Exception('Failed to load QrCodes');
+    }
+
+  }catch(e) {
+    print(e);
+    return null;
+  }
+}
+
 
 Future<bool> deleteQR(int id) async {
   try{
     final response = await http.delete(
-      Uri.parse('http://192.168.1.6:8080/location/delete/${id}'),
+      Uri.parse('http://192.168.2.105:8080/location/delete/${id}'),
       headers: {"Content-Type": "application/json"},
     );
     if (response.statusCode >= 200 && response.statusCode <= 300) {

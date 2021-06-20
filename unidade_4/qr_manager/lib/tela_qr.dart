@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_manager/gmap.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qr_manager/configuracao.dart';
+import 'package:qr_manager/services/qrService.dart';
 
 class TelaQR extends StatefulWidget {
   String lat;
@@ -48,8 +49,7 @@ class _TelaQRState extends State<TelaQR> {
     super.dispose();
   }
 
-  static TextEditingController qrControllerDesc =
-      new TextEditingController();
+  static TextEditingController qrControllerDesc = new TextEditingController();
 
   bool _isEditingText = false;
   String initialText;
@@ -57,7 +57,6 @@ class _TelaQRState extends State<TelaQR> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: Text("QR - " + desc),
       ),
@@ -68,44 +67,45 @@ class _TelaQRState extends State<TelaQR> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => GMap(lat: lat,
-                          long: long)));
+                        builder: (context) => GMap(lat: lat, long: long)));
               })),
       body: Center(
           child: ListView(
         padding: const EdgeInsets.all(8),
         children: <Widget>[
           Padding(
-              padding: EdgeInsets.all(0),
-                child: Center(
-                    child: Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child:  Builder(builder: (context) {
-                          int qrErroCorrectLevel;
-                          if(Configuracao.correctionLevel == 1){
-                            qrErroCorrectLevel = QrErrorCorrectLevel.L;
-                          }else if(Configuracao.correctionLevel == 2){
-                            qrErroCorrectLevel = QrErrorCorrectLevel.M;
-                          }else{
-                            qrErroCorrectLevel = QrErrorCorrectLevel.H;
-                          }
-                          debugPrint('configuracao:');
-                          debugPrint(Configuracao.correctionLevel.toString());
-                          debugPrint('if');
-                          debugPrint(qrErroCorrectLevel.toString());
-                          return
-                            QrImage(
-                              data: "${lat},${long}",
-                              gapless: true,
-                              size: 350,
-                              errorCorrectionLevel: qrErroCorrectLevel,
-                              embeddedImage: AssetImage('assets/images/qr_manager_logo.png'),
-                              embeddedImageStyle: QrEmbeddedImageStyle(
-                                size: Size(50, 50),
-                              ),
-                            );
-                        },) )),
-              ),
+            padding: EdgeInsets.all(0),
+            child: Center(
+                child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Builder(
+                      builder: (context) {
+                        int qrErroCorrectLevel;
+                        if (Configuracao.correctionLevel == 1) {
+                          qrErroCorrectLevel = QrErrorCorrectLevel.L;
+                        } else if (Configuracao.correctionLevel == 2) {
+                          qrErroCorrectLevel = QrErrorCorrectLevel.M;
+                        } else {
+                          qrErroCorrectLevel = QrErrorCorrectLevel.H;
+                        }
+                        debugPrint('configuracao:');
+                        debugPrint(Configuracao.correctionLevel.toString());
+                        debugPrint('if');
+                        debugPrint(qrErroCorrectLevel.toString());
+                        return QrImage(
+                          data: "${lat},${long}",
+                          gapless: true,
+                          size: 350,
+                          errorCorrectionLevel: qrErroCorrectLevel,
+                          embeddedImage:
+                              AssetImage('assets/images/qr_manager_logo.png'),
+                          embeddedImageStyle: QrEmbeddedImageStyle(
+                            size: Size(50, 50),
+                          ),
+                        );
+                      },
+                    ))),
+          ),
           Padding(
               padding: EdgeInsets.all(0),
               child: Card(
@@ -120,98 +120,109 @@ class _TelaQRState extends State<TelaQR> {
                     padding: EdgeInsets.all(10.0),
                     child: Text("Longitude: " + long)),
               )),
-                  Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Row(children: [Text("Descrição: " + desc),
-                        Padding(padding: EdgeInsets.fromLTRB(90, 0, 0, 0), child: ElevatedButton(
-                          onPressed: () {
+          Card(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(children: [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: Row(children: [
+                        Text("Descrição: "),
+                        _editTitleTextField()
+                      ],)),
 
-                            return showDialog<void>(
-                              context: context,
-                              barrierDismissible: false, // user must tap button!
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Edição'),
-                                  content: Container(child: _editTitleTextField(),),
-                                  actions: <Widget>[
-                                    //   TextButton(
-                                    //     child: const Text('Confirmar'),
-                                    //     onPressed: () async {
-                                    //       deleteQR(element.id).then((value) async {
-                                    //         if (value){
-                                    //           // debugPrint(indice.toString());
-                                    //           listaQr.removeAt(indice);
-                                    //           // context.findAncestorStateOfType().setState(() {
-                                    //           //   _createTable(context);
-                                    //           // });
-                                    //           Navigator.of(context).pop(true);
-                                    //           await _createTable(_scaffoldKey.currentContext);
-                                    //
-                                    //         } else {
-                                    //           Navigator.of(context).pop(false);
-                                    //           ScaffoldMessenger.of(context).showSnackBar(
-                                    //               SnackBar(
-                                    //                   content: Text('Falha na exclusão')));
-                                    //         }
-                                    //       });
-                                    //     },
-                                    //   ),
-                                    TextButton(
-                                      child: const Text('Cancelar'),
-                                      onPressed: () {
-                                        // context.findAncestorStateOfType().setState(() {
-                                        //   _createTable(context);
-                                        // });
-                                        Navigator.of(context).pop(false);
-                                      },
-                                    ),
-                                  ],
-                                );
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Visibility(
+                            visible: _isEditingText? false : true,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(primary: Colors.white),
+                              onPressed: () {
+                                setState(() {
+                                  _isEditingText = true;
+                                });
                               },
-                            );
-                          },
-                          child: const Text("Editar"),
-                        ),)
-                        ]),
-                  ),
-                  )],
+                              child: Icon(Icons.edit,color: Colors.grey),
+                            )),
+                      ),
+                    ])
+                ,Row(children: [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                      child: Visibility(
+                          visible: _isEditingText? true : false,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(primary: Colors.white),
+                            onPressed: () {
+                              setState(() {
+                                initialText= qrControllerDesc.value.text;
+                                _isEditingText = false;
+
+                              });
+                              getQRid(id).then((value) {
+                                value.desc = initialText;
+                                deleteQR(id);
+                                createQR(value).then((value) {debugPrint(value.toString());
+                                });
+                              });
+                            },
+                            child: Icon(Icons.check,color: Colors.blue),
+                          ))),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: Visibility(
+                          visible: _isEditingText? true : false,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(primary: Colors.white),
+                            onPressed: () {
+                              setState(() {
+                                qrControllerDesc.text = initialText;
+                                _isEditingText = false;
+                              });
+                            },
+                            child: Icon(Icons.clear_rounded,color: Colors.red),
+                          )))
+                ],)
+              ],),
+            ),
+          )
+        ],
       )),
     );
   }
 
-
-
   Widget _editTitleTextField() {
     if (_isEditingText)
-      return Center(
-        child: TextField(
-          onSubmitted: (newValue){
-            setState(() {
-              initialText = newValue;
-              _isEditingText = false;
-            });
-          },
-          autofocus: true,
-          controller: qrControllerDesc,
-        ),
-      );
+         return Flexible(child: Padding(
+             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+             child: TextField(
+           maxLength: 30,
+           onSubmitted: (newValue) {
+             setState(() {
+               initialText = newValue;
+               _isEditingText = false;
+             });
+           },
+           autofocus: true,
+           controller: qrControllerDesc,
+
+         )));
+
     return InkWell(
         onTap: () {
-      setState(() {
-        _isEditingText = true;
-      });
-    },
-    child: Text(
-    initialText,
-    style: TextStyle(
-    color: Colors.black,
-    fontSize: 18.0,
-    ),
-    ));
+          // setState(() {
+          //   _isEditingText = true;
+          // });
+        },
+        child: Text(
+          initialText,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14.0,
+          ),
+        ));
   }
 }
-
-
 
 
