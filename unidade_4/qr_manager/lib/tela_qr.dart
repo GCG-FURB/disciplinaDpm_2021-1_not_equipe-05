@@ -63,11 +63,11 @@ class _TelaQRState extends State<TelaQR> {
                         child:  QrImage(
                           data: "${lat},${long}",
                           gapless: true,
-                          size: 250,
-                          errorCorrectionLevel: QrErrorCorrectLevel.H,
-                          embeddedImage: AssetImage('assets/images/flutter_logo.png'),
+                          size: 350,
+                          errorCorrectionLevel: QrErrorCorrectLevel.L,
+                          embeddedImage: AssetImage('assets/images/qr_manager_logo.png'),
                           embeddedImageStyle: QrEmbeddedImageStyle(
-                            size: Size(80, 80),
+                            size: Size(50, 50),
                           ),
                         ))),
               ),
