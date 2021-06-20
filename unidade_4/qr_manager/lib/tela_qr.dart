@@ -120,65 +120,62 @@ class _TelaQRState extends State<TelaQR> {
                     padding: EdgeInsets.all(10.0),
                     child: Text("Longitude: " + long)),
               )),
-          Padding(
-              padding: EdgeInsets.all(0),
-
-              child: Column(
-                children: [
                   Card(
                     child: Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text("Descrição: " + desc)),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      debugPrint("presisondosaid");
-                      return AlertDialog(
-                        title: const Text('Edição'),
-                        content: Container(
-                            child: _editTitleTextField(),
-                        ),
-                         actions: <Widget>[
-                        //   TextButton(
-                        //     child: const Text('Confirmar'),
-                        //     onPressed: () async {
-                        //       deleteQR(element.id).then((value) async {
-                        //         if (value){
-                        //           // debugPrint(indice.toString());
-                        //           listaQr.removeAt(indice);
-                        //           // context.findAncestorStateOfType().setState(() {
-                        //           //   _createTable(context);
-                        //           // });
-                        //           Navigator.of(context).pop(true);
-                        //           await _createTable(_scaffoldKey.currentContext);
-                        //
-                        //         } else {
-                        //           Navigator.of(context).pop(false);
-                        //           ScaffoldMessenger.of(context).showSnackBar(
-                        //               SnackBar(
-                        //                   content: Text('Falha na exclusão')));
-                        //         }
-                        //       });
-                        //     },
-                        //   ),
-                          TextButton(
-                            child: const Text('Cancelar'),
-                            onPressed: () {
-                              // context.findAncestorStateOfType().setState(() {
-                              //   _createTable(context);
-                              // });
-                              Navigator.of(context).pop(false);
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                    child: const Text("Editar"),
-                  )
-                ],
-              )),
+                      padding: EdgeInsets.all(10),
+                      child: Row(children: [Text("Descrição: " + desc),
+                        Padding(padding: EdgeInsets.fromLTRB(90, 0, 0, 0), child: ElevatedButton(
+                          onPressed: () {
 
-        ],
+                            return showDialog<void>(
+                              context: context,
+                              barrierDismissible: false, // user must tap button!
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Edição'),
+                                  content: Container(child: _editTitleTextField(),),
+                                  actions: <Widget>[
+                                    //   TextButton(
+                                    //     child: const Text('Confirmar'),
+                                    //     onPressed: () async {
+                                    //       deleteQR(element.id).then((value) async {
+                                    //         if (value){
+                                    //           // debugPrint(indice.toString());
+                                    //           listaQr.removeAt(indice);
+                                    //           // context.findAncestorStateOfType().setState(() {
+                                    //           //   _createTable(context);
+                                    //           // });
+                                    //           Navigator.of(context).pop(true);
+                                    //           await _createTable(_scaffoldKey.currentContext);
+                                    //
+                                    //         } else {
+                                    //           Navigator.of(context).pop(false);
+                                    //           ScaffoldMessenger.of(context).showSnackBar(
+                                    //               SnackBar(
+                                    //                   content: Text('Falha na exclusão')));
+                                    //         }
+                                    //       });
+                                    //     },
+                                    //   ),
+                                    TextButton(
+                                      child: const Text('Cancelar'),
+                                      onPressed: () {
+                                        // context.findAncestorStateOfType().setState(() {
+                                        //   _createTable(context);
+                                        // });
+                                        Navigator.of(context).pop(false);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text("Editar"),
+                        ),)
+                        ]),
+                  ),
+                  )],
       )),
     );
   }
@@ -192,7 +189,7 @@ class _TelaQRState extends State<TelaQR> {
           onSubmitted: (newValue){
             setState(() {
               initialText = newValue;
-              _isEditingText =false;
+              _isEditingText = false;
             });
           },
           autofocus: true,
