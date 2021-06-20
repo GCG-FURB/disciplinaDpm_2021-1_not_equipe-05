@@ -37,7 +37,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static StreamController<ListView> streamLista;
   static List<Widget> listaQr;
-
+  static double _currentSliderValue = 1;
 
 
 
@@ -88,68 +88,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             }));
   }
 
-  final Widget lista = Scaffold(
-      body: Container(
-        child: feature,
-      ),
-      floatingActionButton: Builder(
-          builder: (context) => FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                return showDialog<void>(
-                  context: context,
-                  barrierDismissible: false, // user must tap button!
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Selecione o tipo'),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: const <Widget>[
-                            Text(
-                                'De que maneira você deseja adicionar um QR Code?'),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Localização atual'),
-                          onPressed: () async {
-
-                            Position posicao;
-                            await Geolocator.getCurrentPosition()
-                                .then((value) => {posicao = value});
-                            // debugPrint(posicao.toString());
-                            initializeDateFormatting("pt_BR");
-                            var format = new DateFormat('dd-MM-yyyy hh:mm:ss');
-                            QRDTO qrDto = QRDTO.A(
-                                posicao.latitude.toString(),
-                                posicao.longitude.toString(),
-                                format.format(DateTime.now()));
-                            createQR(qrDto).then((value) async{
-
-                            await _createTable(_scaffoldKey.currentContext).then((value) {
-                              Navigator.of(context).pop();
-                            });
-                            });
-
-
-
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Ler usando câmera'),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LeitorQr()));
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              })));
+  // final Widget lista =
 
   static Future<bool> _createTable(BuildContext context) async {
     debugPrint("-CreateTable");
@@ -250,6 +189,28 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return list;
   }
 
+
+  void _showConfigDialog() async {
+    // <-- note the async keyword here
+
+    // this will contain the result from Navigator.pop(context, result)
+    final valorSelecionado = await showDialog<double>(
+      context: context,
+      builder: (context) => ConfigDialog(),
+    );
+
+    // execution of this code continues when the dialog was closed (popped)
+
+    // note that the result can also be null, so check it
+    // (back button or pressed outside of the dialog)
+    if (valorSelecionado != null) {
+      setState(() {
+        _currentSliderValue = valorSelecionado;
+        // debugPrint(_currentSliderValue.toString());
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -259,6 +220,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         actions: <Widget>[
           GestureDetector(
             onTap: () {
+
               // debugPrint("Refresh");
               // futureListView = _createTable(context);
               _createTable(_scaffoldKey.currentContext);
@@ -284,7 +246,47 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
         ],
       ),
-      body: Center(child: lista),
+      body: Center(child: Scaffold(
+          body: Container(
+            child: feature,
+          ),
+          floatingActionButton: Builder(
+              builder: (context) => FloatingActionButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    return showDialog<void>(
+                      context: context,
+                      barrierDismissible: false, // user must tap button!
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Selecione o tipo'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: const <Widget>[
+                                Text(
+                                    'De que maneira você deseja adicionar um QR Code?'),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                                child: const Text('Localização atual'),
+                                onPressed: _showConfigDialog
+                            ),
+                            TextButton(
+                              child: const Text('Ler usando câmera'),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LeitorQr()));
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  })))),
     );
   }
 }
@@ -296,3 +298,77 @@ class DataTableEntities {
   DataTableEntities(this.entity, this.json);
 }
 
+class ConfigDialog extends StatefulWidget {
+  /// initial selection for the slider
+
+
+  const ConfigDialog({Key key}) : super(key: key);
+
+  @override
+  _ConfigDialogState createState() => _ConfigDialogState();
+}
+
+class _ConfigDialogState extends State<ConfigDialog> {
+  /// current selection of the slider
+  double _sliderValue = 1;
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Preferências do QR Code'),
+      content: Container(
+          height: 300,
+          width: 300,
+          child:ListView(children: [
+            Padding(padding: EdgeInsets.fromLTRB(0,20, 0, 0),child: Text('Nível de redundância')),
+        Container(
+          child: Slider(
+            value: _sliderValue,
+            min: 1,
+            max: 5,
+            divisions:4,
+            label: _sliderValue.round().toString(),
+            onChanged: (value) {
+              setState(() {
+                _sliderValue = value;
+              });
+            },
+          ),
+        ),
+      ],)),
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () {
+            // Use the second argument of Navigator.pop(...) to pass
+            // back a result to the page that opened the dialog
+            Navigator.pop(context, _sliderValue);
+          },
+          child: Text('Concluído'),
+        )
+      ],
+    );
+  }
+}
+
+// Position posicao;
+// await Geolocator.getCurrentPosition()
+//     .then((value) => {posicao = value});
+// // debugPrint(posicao.toString());
+// initializeDateFormatting("pt_BR");
+// var format = new DateFormat('dd-MM-yyyy hh:mm:ss');
+// QRDTO qrDto = QRDTO.A(
+//     posicao.latitude.toString(),
+//     posicao.longitude.toString(),
+//     format.format(DateTime.now()));
+// createQR(qrDto).then((value) async{
+//
+// await _createTable(_scaffoldKey.currentContext).then((value) {
+//   Navigator.of(context).pop();
+// });
+// });
