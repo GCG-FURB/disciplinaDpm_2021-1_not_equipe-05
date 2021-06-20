@@ -262,7 +262,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       // debugPrint(posicao.toString());
                                       initializeDateFormatting("pt_BR");
                                       var format =
-                                          new DateFormat('dd-MM-yyyy hh:mm:ss');
+                                          new DateFormat('dd/MM/yyyy hh:mm:ss');
                                       QRDTO qrDto = QRDTO.A(
                                           posicao.latitude.toString(),
                                           posicao.longitude.toString(),
