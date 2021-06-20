@@ -83,64 +83,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             }));
   }
 
-  final Widget lista = Scaffold(
-      body: Container(
-        child: feature,
-      ),
-      floatingActionButton: Builder(
-          builder: (context) => FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                return showDialog<void>(
-                  context: context,
-                  barrierDismissible: false, // user must tap button!
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Selecione o tipo'),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: const <Widget>[
-                            Text(
-                                'De que maneira você deseja adicionar um QR Code?'),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Localização atual'),
-                          onPressed: () async {
-                            Position posicao;
-                            await Geolocator.getCurrentPosition()
-                                .then((value) => {posicao = value});
-                            // debugPrint(posicao.toString());
-                            initializeDateFormatting("pt_BR");
-                            var format = new DateFormat('dd/MM/yyyy hh:mm:ss');
-                            QRDTO qrDto = QRDTO.A(
-                                posicao.latitude.toString(),
-                                posicao.longitude.toString(),
-                                format.format(DateTime.now()));
-                            createQR(qrDto).then((value) async {
-                              await _createTable(_scaffoldKey.currentContext)
-                                  .then((value) {
-                                Navigator.of(context).pop();
-                              });
-                            });
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Ler usando câmera'),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LeitorQr()));
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              })));
+  // final Widget lista =
 
   static Future<bool> _createTable(BuildContext context) async {
     debugPrint("-CreateTable");
@@ -276,10 +219,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Configuracao()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Configuracao()));
             },
             child: Padding(
               padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -288,7 +229,66 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           )
         ],
       ),
-      body: Center(child: lista),
+      body: Center(
+          child: Scaffold(
+              body: Container(
+                child: feature,
+              ),
+              floatingActionButton: Builder(
+                  builder: (context) => FloatingActionButton(
+                      child: Icon(Icons.add),
+                      onPressed: () {
+                        return showDialog<void>(
+                          context: context,
+                          barrierDismissible: false, // user must tap button!
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Selecione o tipo'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: const <Widget>[
+                                    Text(
+                                        'De que maneira você deseja adicionar um QR Code?'),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                    child: const Text('Localização atual'),
+                                    onPressed: () async {
+                                      Position posicao;
+                                      await Geolocator.getCurrentPosition()
+                                          .then((value) => {posicao = value});
+                                      // debugPrint(posicao.toString());
+                                      initializeDateFormatting("pt_BR");
+                                      var format =
+                                          new DateFormat('dd-MM-yyyy hh:mm:ss');
+                                      QRDTO qrDto = QRDTO.A(
+                                          posicao.latitude.toString(),
+                                          posicao.longitude.toString(),
+                                          format.format(DateTime.now()));
+                                      createQR(qrDto).then((value) async {
+                                        await _createTable(
+                                                _scaffoldKey.currentContext)
+                                            .then((value) {
+                                          Navigator.of(context).pop();
+                                        });
+                                      });
+                                    }),
+                                TextButton(
+                                  child: const Text('Ler usando câmera'),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => LeitorQr()));
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      })))),
     );
   }
 }
