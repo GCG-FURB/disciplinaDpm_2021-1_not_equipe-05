@@ -5,7 +5,6 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_manager/services/qrService.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:qr_manager/gmap.dart';
 
 //void main() => runApp(MaterialApp(home: QRViewExample()));
 
@@ -104,13 +103,13 @@ class _LeitorQrState extends State<LeitorQr> {
         var dadosQrCode = result.code.split(',');
         QRDTO qrDto = QRDTO.A(dadosQrCode[0], dadosQrCode[1], format.format(DateTime.now()));
         createQR(qrDto).then((value) => null);
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    GMap(lat: dadosQrCode[0], long: dadosQrCode[1])));
+        Navigator.of(context).pop(qrDto);
+
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) =>
+        //             GMap.A(lat: dadosQrCode[0], long: dadosQrCode[1], qrdto: qrDto,)));
       }
     });
   }

@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:qr_manager/gmap.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -28,6 +27,7 @@ class _TelaQRState extends State<TelaQR> {
   String long;
   int id;
   String desc;
+  String appTitle;
 
   _TelaQRState({String lat, String long, int id, String desc}) {
     this.lat = lat;
@@ -39,6 +39,7 @@ class _TelaQRState extends State<TelaQR> {
 
   @override
   void initState() {
+    appTitle = "QR - " + desc;
     super.initState();
     qrControllerDesc = TextEditingController(text: initialText);
   }
@@ -58,16 +59,18 @@ class _TelaQRState extends State<TelaQR> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("QR - " + desc),
+        backgroundColor: Colors.deepOrangeAccent,
+        title: Text(appTitle),
       ),
       floatingActionButton: Builder(
           builder: (context) => FloatingActionButton(
+            backgroundColor: Colors.deepOrangeAccent,
               child: Icon(Icons.map),
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => GMap(lat: lat, long: long)));
+                        builder: (context) => GMap.A(lat: lat,long:  long,qrdto: QRDTO(id, lat, long, desc))));
               })),
       body: Center(
           child: ListView(
@@ -80,13 +83,17 @@ class _TelaQRState extends State<TelaQR> {
                     padding: EdgeInsets.all(10.0),
                     child: Builder(
                       builder: (context) {
+                        double tamanho;
                         int qrErroCorrectLevel;
                         if (Configuracao.correctionLevel == 1) {
                           qrErroCorrectLevel = QrErrorCorrectLevel.L;
+                          tamanho = 50;
                         } else if (Configuracao.correctionLevel == 2) {
                           qrErroCorrectLevel = QrErrorCorrectLevel.M;
+                          tamanho = 75;
                         } else {
                           qrErroCorrectLevel = QrErrorCorrectLevel.H;
+                          tamanho = 100;
                         }
                         debugPrint('configuracao:');
                         debugPrint(Configuracao.correctionLevel.toString());
@@ -100,7 +107,7 @@ class _TelaQRState extends State<TelaQR> {
                           embeddedImage:
                               AssetImage('assets/images/qr_manager_logo.png'),
                           embeddedImageStyle: QrEmbeddedImageStyle(
-                            size: Size(50, 50),
+                            size: Size(tamanho, tamanho),
                           ),
                         );
                       },
@@ -158,12 +165,12 @@ class _TelaQRState extends State<TelaQR> {
                               setState(() {
                                 initialText= qrControllerDesc.value.text;
                                 _isEditingText = false;
-
+                                appTitle = "QR - " + initialText;
                               });
                               getQRid(id).then((value) {
                                 value.desc = initialText;
                                 deleteQR(id);
-                                createQR(value).then((value) {debugPrint(value.toString());
+                                createQR(value).then((value) {this.id = value.id;
                                 });
                               });
                             },

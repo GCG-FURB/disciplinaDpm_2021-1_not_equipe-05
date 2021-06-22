@@ -10,7 +10,7 @@ class Configuracao extends StatefulWidget {
 }
 
 class _ConfiguracaoState extends State<Configuracao> {
-  void _showConfigDialog() async {
+  /*void _showConfigDialog() async {
     // <-- note the async keyword here
 
     // this will contain the result from Navigator.pop(context, result)
@@ -29,12 +29,13 @@ class _ConfiguracaoState extends State<Configuracao> {
         // debugPrint(_currentSliderValue.toString());
       });
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.deepOrangeAccent,
         title: Text("Configurações"),
       ),
       body: Center(
@@ -44,7 +45,7 @@ class _ConfiguracaoState extends State<Configuracao> {
           Card(child: Column(children: [
             Padding(
                 padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                child: Text("Selecione o nível de correção dos QrCodes gerados")),
+                child: Text("Nível de correção dos QrCodes gerados")),
             Container(
               child: Slider(
                 value: Configuracao.correctionLevel,

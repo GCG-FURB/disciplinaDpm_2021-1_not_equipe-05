@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'services/qrService.dart';
+import 'package:qr_manager/gmap.dart';
 
 void main() => runApp(const MyApp());
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -115,7 +116,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               long: element.long,
                               id: element.id,
                               desc: element.desc,
-                            )))
+                            ))).then((value) {
+                              _createTable(context);
+                })
               },
           child: Builder(builder: (context) {
             return Dismissible(
@@ -190,6 +193,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Colors.deepOrangeAccent,
         title: const Text('QR Manager'),
         actions: <Widget>[
           GestureDetector(
@@ -219,6 +223,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
           GestureDetector(
             onTap: () {
+
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => Configuracao()));
             },
@@ -236,6 +241,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
               floatingActionButton: Builder(
                   builder: (context) => FloatingActionButton(
+                    backgroundColor: Colors.deepOrangeAccent,
                       child: Icon(Icons.add),
                       onPressed: () {
                         return showDialog<void>(
@@ -278,10 +284,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 TextButton(
                                   child: const Text('Ler usando câmera'),
                                   onPressed: () {
+
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => LeitorQr()));
+                                            builder: (context) => LeitorQr())).then((value) {
+                                            Navigator.of(_scaffoldKey.currentContext).pop();
+
+                                              Navigator.push(
+                                                  _scaffoldKey.currentContext,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          GMap.A(lat: value.lat, long:  value.long, qrdto: value,))).then((value) {
+                                                _createTable(_scaffoldKey.currentContext);
+                                              });
+                                    });
                                   },
                                 ),
                               ],
